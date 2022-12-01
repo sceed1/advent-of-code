@@ -1,11 +1,10 @@
 "use strict";
 exports.__esModule = true;
 exports.syncReadFile = void 0;
-var readFileSync = require('fs').readFileSync;
+var fs_1 = require("fs");
 function syncReadFile(filename) {
-    var contents = readFileSync(filename, 'utf-8');
+    var contents = (0, fs_1.readFileSync)(filename, 'utf-8');
     var arr = contents.split(/\r?\n/);
-    console.log(arr); // 👉️ ['One', 'Two', 'Three', 'Four']
     return arr;
 }
 exports.syncReadFile = syncReadFile;

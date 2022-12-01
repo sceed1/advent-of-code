@@ -17,12 +17,7 @@ numberData.forEach(val => {
     };
 })
 
-let result = 0;
-aggregatedValues.forEach(value => {
-    if(value > result) {
-        result = value;
-    }
-});
+aggregatedValues.sort((a:number, b:number) => a - b).reverse();
 
-console.log(result);
+console.log(aggregatedValues[0] + aggregatedValues[1] + aggregatedValues[2]);
 

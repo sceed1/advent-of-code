@@ -15,10 +15,5 @@ numberData.forEach(function (val) {
     }
     ;
 });
-var result = 0;
-aggregatedValues.forEach(function (value) {
-    if (value > result) {
-        result = value;
-    }
-});
-console.log(result);
+aggregatedValues.sort(function (a, b) { return a - b; }).reverse();
+console.log(aggregatedValues[0] + aggregatedValues[1] + aggregatedValues[2]);

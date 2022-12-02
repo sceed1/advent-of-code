@@ -1,6 +1,6 @@
 import { syncReadFile } from '../general/readTxtFile';
 import { calcRpsRoundResult, getLoosingAnswer, getWinningAnswer } from './calcfunctions';
-import { rpsInput, rpsInputWithResult } from './day2.model';
+import { RpsInputWithResult } from './day2.model';
 
 const inputData: string[] = syncReadFile('./day2-input.txt');
 
@@ -22,7 +22,7 @@ inputData
             elv: splittedValues[0], 
             me: calcMyInput(splittedValues[0], splittedValues[1]),
             result: splittedValues[1]
-        } as rpsInputWithResult
+        } as RpsInputWithResult
     })
     .forEach(input => {
         result2 += calcRpsRoundResult(input);

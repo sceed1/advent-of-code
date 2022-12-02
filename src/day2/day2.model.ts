@@ -1,8 +1,8 @@
-export interface rpsInput {
+export interface RpsInput {
     elv: string,
     me: string,
 }
 
-export type rpsInputWithResult = rpsInput & {
+export type RpsInputWithResult = RpsInput & {
     result: string
 }

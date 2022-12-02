@@ -4,6 +4,14 @@ export const isWinningMatchUp = (input: rpsInput) =>
     (input.elv === 'B' && input.me === 'C') ||
     (input.elv === 'C' && input.me === 'A')
 
+export const getWinningAnswer = (elv: string) => 
+    elv === 'A' ? 'B' :
+        elv === 'B' ? 'C' : 'A';
+
+export const getLoosingAnswer = (elv: string) => 
+elv === 'A' ? 'C' :
+    elv === 'B' ? 'A' : 'B'
+
 export const getPointsForOwnChoice = (choice: string) => 
     choice === 'A' ? 1 : 
         choice === 'B' ? 2 : 3; 

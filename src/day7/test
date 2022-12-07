@@ -1,0 +1,27 @@
+{
+  childDirs: <ref *1> [
+    {
+      childDirs: [Circular *1],
+      containingFiles: [Array],
+      name: 'a',
+      parentDir: [Circular *2]
+    },
+    {
+      childDirs: [Circular *1],
+      containingFiles: [Array],
+      name: 'd',
+      parentDir: [Circular *2]
+    },
+    {
+      childDirs: [Circular *1],
+      containingFiles: [Array],
+      name: 'e',
+      parentDir: [Object]
+    }
+  ],
+  containingFiles: [
+    { size: 14848514, name: 'b.txt' },
+    { size: 8504156, name: 'c.dat' },
+  ],
+  name: '/'
+}

@@ -18,39 +18,45 @@ var emptyDir = {
     containingFiles: []
 };
 var rootDir = __assign(__assign({}, emptyDir), { name: '/' });
-var currentDir = rootDir;
-var changeDirectory = function (destinationDir) { return destinationDir === '..'
-    ? currentDir.parentDir
-    : currentDir.childDirs.find(function (child) { return child.name === destinationDir; }); };
-var listFilesAndDirectories = function (index) {
-    console.log('index: ' + index + ' data: ', inputData[index]);
-    while (!inputData[index].startsWith('$')) {
-        var line = inputData[index].split(' ');
-        if (line[0] === 'dir') {
-            currentDir.childDirs.push(__assign(__assign({}, emptyDir), { name: line[1], parentDir: currentDir }));
-        }
-        else {
-            currentDir.containingFiles.push({
-                size: Number(line[0]),
-                name: line[1]
-            });
-        }
-        index++;
-    }
-};
-var executeCommand = function (command, index) {
-    if (command.startsWith('cd')) {
-        currentDir = changeDirectory(command.slice(3));
+var currentDir;
+var changeDirectory = function (destinationDir) {
+    if (destinationDir === '/') {
+        return rootDir;
     }
     else {
-        listFilesAndDirectories(index + 1);
+        if (destinationDir === '..') {
+            return currentDir.parentDir;
+        }
+        else {
+            return currentDir.childDirs.find(function (child) { return child.name === destinationDir; });
+        }
+    }
+};
+var createFileOrDir = function (line) {
+    if (line.startsWith('dir')) {
+        currentDir.childDirs.push(__assign(__assign({}, emptyDir), { parentDir: currentDir, name: line.slice(4) }));
+    }
+    else {
+        var fileArr = line.split(' ');
+        currentDir.containingFiles.push({
+            size: Number(fileArr[0]),
+            name: fileArr[1]
+        });
+    }
+};
+var executeCommand = function (command) {
+    if (command.startsWith('cd')) {
+        var newDir = __assign({}, changeDirectory(command.slice(3)));
+        currentDir = newDir;
     }
 };
 inputData
-    .forEach(function (line, index) {
+    .forEach(function (line) {
     if (line.startsWith('$')) {
-        executeCommand(line.slice(2), index);
-        console.log(rootDir);
+        executeCommand(line.slice(2));
+    }
+    else {
+        createFileOrDir(line);
     }
 });
-console.log(rootDir);
+console.log(rootDir.childDirs.map(function (c) { return c.name; }));

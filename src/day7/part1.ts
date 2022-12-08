@@ -2,12 +2,12 @@ import { syncReadFile } from '../general/readTxtFile';
 
 const inputData: string[] = syncReadFile('./input.txt');
 
-interface File {
+type File = {
     name: string,
     size: number,
 }
 
-interface Directoy {
+type Directoy = {
     name: string,
     parentDir: Directoy,
     childDirs?: Directoy[],
@@ -19,52 +19,57 @@ const emptyDir = {
     containingFiles: []
 }
 
-let rootDir = {
+const rootDir = {
     ...emptyDir,
     name: '/',
 } as Directoy;
 
-let currentDir = rootDir;
+let currentDir;
 
-const changeDirectory = (destinationDir: string) => destinationDir === '..'
-    ? currentDir.parentDir
-    : currentDir.childDirs.find(child => child.name === destinationDir);
-
-const listFilesAndDirectories = (index: number) => {
-    console.log('index: ' + index + ' data: ', inputData[index]);
-    while(!inputData[index].startsWith('$')) {
-        const line = inputData[index].split(' ');
-        if (line[0] === 'dir') {
-            currentDir.childDirs.push({
-                ...emptyDir,
-                name: line[1],
-                parentDir: currentDir,
-            });
+const changeDirectory = (destinationDir: string) => {
+    if (destinationDir === '/') {
+        return rootDir;
+    } else {
+        if (destinationDir === '..') {
+            return currentDir.parentDir;
         } else {
-            currentDir.containingFiles.push({
-                size: Number(line[0]),
-                name: line[1]
-            })
+            return currentDir.childDirs.find(child => child.name === destinationDir)
         }
-        index++;
     }
 }
 
-const executeCommand = (command: string, index) => {
-    if (command.startsWith('cd')) {
-        currentDir = changeDirectory(command.slice(3));
+const createFileOrDir = (line: string) => {
+    if (line.startsWith('dir')) {
+        currentDir.childDirs.push({
+            ...emptyDir,
+            parentDir: currentDir,
+            name: line.slice(4)
+        })
     } else {
-        listFilesAndDirectories(index + 1);
+        const fileArr = line.split(' ');
+        currentDir.containingFiles.push({
+            size: Number(fileArr[0]),
+            name: fileArr[1],
+        })
+    }
+
+}
+
+
+const executeCommand = (command: string) => {
+    if (command.startsWith('cd')) {
+        const newDir = {...changeDirectory(command.slice(3))}
+        currentDir = newDir;
     }
 }
 
 inputData
-    .forEach((line, index) => {
+    .forEach((line) => {
         if (line.startsWith('$')) {
-            executeCommand(line.slice(2), index)
-            console.log(rootDir);
+            executeCommand(line.slice(2))
+        } else {
+            createFileOrDir(line)
         }
     })
 
-
-console.log(rootDir);
+console.log(rootDir.childDirs.map(c => c.name))

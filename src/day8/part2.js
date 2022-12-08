@@ -18,17 +18,23 @@ var mappedData = inputData.map(function (input) {
     }
     return inputArray;
 });
-var isVisibleFromLeft = function (value, leftValues) { return leftValues.every(function (val) { return val < value; }); };
-var isVisibleFromRight = function (value, rightValues) { return rightValues.every(function (val) { return val < value; }); };
-var isVisibleFromTop = function (value, topValues) { return topValues.every(function (val) { return val < value; }); };
-var isVisibleFromBottom = function (value, bottomValues) { return bottomValues.every(function (val) { return val < value; }); };
-var visibleFromOutside = (mappedData.length - 1) * 2 + (mappedData[0].length - 1) * 2;
-var totalVisible = visibleFromOutside;
+var highscore = 0;
+var calcScoreForDirection = function (treeHeight, row) {
+    var score = 0;
+    for (var i = 0; i < row.length; i++) {
+        score++;
+        if (row[i] >= treeHeight) {
+            return score;
+        }
+    }
+    return score;
+};
 for (var row = 1; row < mappedData.length - 1; row++) {
     for (var col = 1; col < mappedData[row].length - 1; col++) {
-        var currentVal = mappedData[row][col];
+        var curr = mappedData[row][col];
         var leftValuesRowCopy = __spreadArray([], mappedData[row], true);
         var leftValues = leftValuesRowCopy.splice(0, col);
+        leftValues.reverse();
         var rightValuesRowCopy = __spreadArray([], mappedData[row], true);
         var rightValues = rightValuesRowCopy.splice(col + 1);
         var topValues = [];
@@ -36,21 +42,19 @@ for (var row = 1; row < mappedData.length - 1; row++) {
         for (var i = 0; i < row; i++) {
             topValues.push(mappedData[i][col]);
         }
+        topValues.reverse();
         for (var i = (row + 1); i < mappedData.length; i++) {
             bottomValues.push(mappedData[i][col]);
         }
-        if (isVisibleFromLeft(currentVal, leftValues)) {
-            totalVisible++;
-        }
-        else if (isVisibleFromRight(currentVal, rightValues)) {
-            totalVisible++;
-        }
-        else if (isVisibleFromTop(currentVal, topValues)) {
-            totalVisible++;
-        }
-        else if (isVisibleFromBottom(currentVal, bottomValues)) {
-            totalVisible++;
+        var var1 = calcScoreForDirection(curr, leftValues);
+        var var2 = calcScoreForDirection(curr, topValues);
+        var var3 = calcScoreForDirection(curr, rightValues);
+        var var4 = calcScoreForDirection(curr, bottomValues);
+        var treeScore = (var1 || 1) * (var2 || 1) * (var3 || 1) * (var4 || 1);
+        if (treeScore > highscore) {
+            highscore = treeScore;
         }
     }
 }
-console.log(totalVisible);
+console.log(mappedData);
+console.log(highscore);

@@ -10,8 +10,8 @@ type File = {
 type Directoy = {
     name: string,
     parentDir: Directoy,
-    childDirs?: Directoy[],
-    containingFiles?: File[],
+    childDirs: Directoy[],
+    containingFiles: File[],
 }
 
 const emptyDir = {

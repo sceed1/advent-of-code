@@ -13,32 +13,38 @@ var __assign = (this && this.__assign) || function () {
 exports.__esModule = true;
 var readTxtFile_1 = require("../general/readTxtFile");
 var inputData = (0, readTxtFile_1.syncReadFile)('./input.txt');
-var emptyDir = {
+var rootDir = {
     childDirs: [],
-    containingFiles: []
+    containingFiles: [],
+    name: '/',
+    parentDir: {}
 };
-var rootDir = __assign(__assign({}, emptyDir), { name: '/' });
-var currentDir;
-var changeDirectory = function (destinationDir) {
+var workingDir;
+var changeOrCreateDirectory = function (destinationDir) {
     if (destinationDir === '/') {
         return rootDir;
     }
     else {
         if (destinationDir === '..') {
-            return currentDir.parentDir;
+            return workingDir.parentDir;
         }
         else {
-            return currentDir.childDirs.find(function (child) { return child.name === destinationDir; });
+            return workingDir.childDirs.find(function (child) { return child.name === destinationDir; });
         }
     }
 };
 var createFileOrDir = function (line) {
     if (line.startsWith('dir')) {
-        currentDir.childDirs.push(__assign(__assign({}, emptyDir), { parentDir: currentDir, name: line.slice(4) }));
+        workingDir.childDirs.push({
+            childDirs: [],
+            containingFiles: [],
+            parentDir: workingDir,
+            name: line.slice(4)
+        });
     }
     else {
         var fileArr = line.split(' ');
-        currentDir.containingFiles.push({
+        workingDir.containingFiles.push({
             size: Number(fileArr[0]),
             name: fileArr[1]
         });
@@ -46,9 +52,17 @@ var createFileOrDir = function (line) {
 };
 var executeCommand = function (command) {
     if (command.startsWith('cd')) {
-        var newDir = __assign({}, changeDirectory(command.slice(3)));
-        currentDir = newDir;
+        var newDir = __assign({}, changeOrCreateDirectory(command.slice(3)));
+        workingDir = newDir;
     }
+};
+var dirs = [];
+var calcFileSizeOfDir = function (dir) {
+    var dirFileSize = 0;
+    dir.containingFiles.forEach(function (file) { return dirFileSize += file.size; });
+    dir.childDirs.forEach(function (childDir) { return dirFileSize += calcFileSizeOfDir(childDir); });
+    dirs.push(dirFileSize);
+    return dirFileSize;
 };
 inputData
     .forEach(function (line) {
@@ -59,4 +73,6 @@ inputData
         createFileOrDir(line);
     }
 });
-console.log(rootDir.childDirs.map(function (c) { return c.name; }));
+calcFileSizeOfDir(rootDir);
+var sum = dirs.filter(function (size) { return size < 100000; }).reduce(function (a, b) { return a + b; });
+console.log(sum);

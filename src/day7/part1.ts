@@ -14,40 +14,38 @@ type Directoy = {
     containingFiles: File[],
 }
 
-const emptyDir = {
+const rootDir: Directoy = {
     childDirs: [],
-    containingFiles: []
-}
-
-const rootDir = {
-    ...emptyDir,
+    containingFiles: [],
     name: '/',
-} as Directoy;
+    parentDir: {} as Directoy
+};
 
-let currentDir;
+let workingDir;
 
-const changeDirectory = (destinationDir: string) => {
+const changeOrCreateDirectory = (destinationDir: string) => {
     if (destinationDir === '/') {
         return rootDir;
     } else {
         if (destinationDir === '..') {
-            return currentDir.parentDir;
+            return workingDir.parentDir;
         } else {
-            return currentDir.childDirs.find(child => child.name === destinationDir)
+            return workingDir.childDirs.find(child => child.name === destinationDir)
         }
     }
 }
 
 const createFileOrDir = (line: string) => {
     if (line.startsWith('dir')) {
-        currentDir.childDirs.push({
-            ...emptyDir,
-            parentDir: currentDir,
+        workingDir.childDirs.push({
+            childDirs: [],
+            containingFiles: [],
+            parentDir: workingDir,
             name: line.slice(4)
         })
     } else {
         const fileArr = line.split(' ');
-        currentDir.containingFiles.push({
+        workingDir.containingFiles.push({
             size: Number(fileArr[0]),
             name: fileArr[1],
         })
@@ -58,9 +56,18 @@ const createFileOrDir = (line: string) => {
 
 const executeCommand = (command: string) => {
     if (command.startsWith('cd')) {
-        const newDir = {...changeDirectory(command.slice(3))}
-        currentDir = newDir;
+        const newDir = {...changeOrCreateDirectory(command.slice(3))}
+        workingDir = newDir;
     }
+}
+
+const dirs = []
+const calcFileSizeOfDir = (dir: Directoy): number => {
+    let dirFileSize = 0;
+    dir.containingFiles.forEach(file => dirFileSize += file.size);
+    dir.childDirs.forEach(childDir => dirFileSize += calcFileSizeOfDir(childDir));
+    dirs.push(dirFileSize)
+    return dirFileSize;
 }
 
 inputData
@@ -72,4 +79,8 @@ inputData
         }
     })
 
-console.log(rootDir.childDirs.map(c => c.name))
+calcFileSizeOfDir(rootDir);
+
+const sum = dirs.filter(size => size < 100000).reduce((a, b) => a + b)
+
+console.log(sum);

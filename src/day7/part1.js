@@ -74,5 +74,7 @@ inputData
     }
 });
 calcFileSizeOfDir(rootDir);
-var sum = dirs.filter(function (size) { return size < 100000; }).reduce(function (a, b) { return a + b; });
-console.log(sum);
+var sizeOfAllDirs = dirs.reduce(function (a, b) { return a + b; });
+var result = dirs.filter(function (size) { return 47052440 - size < 40000000; }).reduce(function (a, b) { return a > b ? b : a; });
+console.log(result);
+//console.log(dirs.sort((a, b) => a - b).reverse());

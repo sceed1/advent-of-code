@@ -81,6 +81,10 @@ inputData
 
 calcFileSizeOfDir(rootDir);
 
-const sum = dirs.filter(size => size < 100000).reduce((a, b) => a + b)
+const sizeOfAllDirs = dirs.reduce((a, b) => a + b);
 
-console.log(sum);
+const result = dirs.filter(size => 47052440 - size < 40000000).reduce((a, b) => a > b ? b : a)
+
+
+console.log(result);
+//console.log(dirs.sort((a, b) => a - b).reverse());

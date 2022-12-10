@@ -25,11 +25,5 @@ for (let input of inputData) {
     }
 }
 
-console.log(resultMap.get(19));
-console.log(resultMap.get(59));
-console.log(resultMap.get(99));
-console.log(resultMap.get(139));
-console.log(resultMap.get(179));
-console.log(resultMap.get(219));
 console.log('result: ', resultMap.get(19) * 20 + resultMap.get(59) * 60 + resultMap.get(99) * 100 + resultMap.get(139) * 140 + resultMap.get(179) * 180 + resultMap.get(219) * 220)
 

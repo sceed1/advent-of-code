@@ -1,6 +1,8 @@
 import {realMonkeys, testMonkeys} from './input';
 
-let monkeys = testMonkeys
+let monkeys = realMonkeys
+
+const superModulo = monkeys.map(m => m.divisor).reduce((a,b) => a * b);
 
 for (let i = 1; i<=10000; i++) {
 
@@ -8,7 +10,8 @@ for (let i = 1; i<=10000; i++) {
 
         for (let item of monkey.items) {
             let worryLevel = monkey.operation(item);
-            monkeys[monkey.testFunction(worryLevel)].items.push(worryLevel);
+            const newItem = worryLevel % superModulo;
+            monkeys[monkey.testFunction(newItem, monkey.divisor)].items.push(newItem);
             monkey.inspectedItems++;
         }
 

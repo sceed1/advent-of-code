@@ -1,14 +1,16 @@
 "use strict";
 exports.__esModule = true;
 var input_1 = require("./input");
-var monkeys = input_1.testMonkeys;
+var monkeys = input_1.realMonkeys;
+var superModulo = monkeys.map(function (m) { return m.divisor; }).reduce(function (a, b) { return a * b; });
 for (var i = 1; i <= 10000; i++) {
     for (var _i = 0, monkeys_1 = monkeys; _i < monkeys_1.length; _i++) {
         var monkey = monkeys_1[_i];
         for (var _a = 0, _b = monkey.items; _a < _b.length; _a++) {
             var item = _b[_a];
             var worryLevel = monkey.operation(item);
-            monkeys[monkey.testFunction(worryLevel)].items.push(worryLevel);
+            var newItem = worryLevel % superModulo;
+            monkeys[monkey.testFunction(newItem, monkey.divisor)].items.push(newItem);
             monkey.inspectedItems++;
         }
         monkey.items = [];

@@ -9,7 +9,7 @@ for (var i = 1; i <= 20; i++) {
             var item = _b[_a];
             var worryLevel = monkey.operation(item);
             var newItem = Math.floor(worryLevel / 3);
-            monkeys[monkey.testFunction(newItem)].items.push(newItem);
+            monkeys[monkey.testFunction(newItem, monkey.divisor)].items.push(newItem);
             monkey.inspectedItems++;
         }
         monkey.items = [];

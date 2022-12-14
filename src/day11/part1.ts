@@ -9,7 +9,7 @@ for (let i = 1; i<=20; i++) {
         for (let item of monkey.items) {
             let worryLevel = monkey.operation(item);
             const newItem = Math.floor(worryLevel / 3)
-            monkeys[monkey.testFunction(newItem)].items.push(newItem);
+            monkeys[monkey.testFunction(newItem, monkey.divisor)].items.push(newItem);
             monkey.inspectedItems++;
         }
 

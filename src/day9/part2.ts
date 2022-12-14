@@ -27,10 +27,10 @@ const move = (command: Command, rope: CompleteRope) => {
     for (let i = 0; i < command.distance; i++) {
         const tailLength = rope.tail.length;
 
-        if (command.direction === 'up') { rope.head.col++; }
-        else if (command.direction === 'down') { rope.head.col--; }
-        else if (command.direction === 'left') { rope.head.row--; }
-        else { rope.head.row++; }
+        if (command.direction === 'up') { rope.head.row++; }
+        else if (command.direction === 'down') { rope.head.row--; }
+        else if (command.direction === 'left') { rope.head.col--; }
+        else { rope.head.col++; }
 
         for (let j = 0; j < tailLength; j++) {
             if (j === 0) {
@@ -54,6 +54,35 @@ const move = (command: Command, rope: CompleteRope) => {
 };
 
 const snapTail = (ropeSection: RopeSection): Coordinates => {
+    if (Math.abs(ropeSection.head.row - ropeSection.tail.row ) > 1 &&
+        Math.abs(ropeSection.head.col - ropeSection.tail.col ) > 1) {
+        if (ropeSection.head.row > ropeSection.tail.row) {
+            if (ropeSection.head.col > ropeSection.tail.col) {
+                return {
+                    row: ropeSection.head.row - 1,
+                    col: ropeSection.head.col - 1,
+                }
+            } else {
+                return {
+                    row: ropeSection.head.row - 1,
+                    col: ropeSection.head.col + 1,
+                }
+            }
+        } else {
+            if (ropeSection.head.col > ropeSection.tail.col) {
+                return {
+                    row: ropeSection.head.row + 1,
+                    col: ropeSection.head.col - 1,
+                }
+            } else {
+                return {
+                    row: ropeSection.head.row + 1,
+                    col: ropeSection.head.col + 1,
+                }
+            }
+        }
+
+    }
     if (Math.abs(ropeSection.head.row - ropeSection.tail.row ) > 1) {
         if (ropeSection.head.row > ropeSection.tail.row) {
             return {
